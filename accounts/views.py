@@ -85,7 +85,7 @@ def dashboard(request):
     Main dashboard showing all accounts and summary.
     Demonstrates OOP: Uses polymorphism to handle different account types.
     """
-    # Get all accounts for the user
+    # Get all accounts for the user (use correct related_names)
     savings_accounts = SavingsAccount.objects.filter(customer=request.user, is_active=True)
     current_accounts = CurrentAccount.objects.filter(customer=request.user, is_active=True)
     
@@ -130,20 +130,22 @@ def create_account(request):
             try:
                 # Polymorphism: Create appropriate account type
                 if account_type == 'savings':
+                    # Create account with zero balance first
                     account = SavingsAccount.objects.create(
                         customer=request.user,
-                        balance=initial_deposit
+                        balance=0
                     )
-                    # Use polymorphic deposit method
+                    # Use polymorphic deposit method to record initial deposit
                     account.deposit(initial_deposit)
                     messages.success(request, f'Savings Account created successfully! Account Number: {account.account_number}')
                 
                 elif account_type == 'current':
+                    # Create account with zero balance first
                     account = CurrentAccount.objects.create(
                         customer=request.user,
-                        balance=initial_deposit
+                        balance=0
                     )
-                    # Use polymorphic deposit method
+                    # Use polymorphic deposit method to record initial deposit
                     account.deposit(initial_deposit)
                     messages.success(request, f'Current Account created successfully! Account Number: {account.account_number}')
                 
